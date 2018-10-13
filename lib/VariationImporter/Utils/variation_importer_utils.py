@@ -127,7 +127,6 @@ class variation_importer_utils:
             'strains': []
         }
         for idx, row in locations.iterrows():
-            # print("Row: {}".format(row))
             population['strains'].append(
                 {
                     'source_id': str(row['id']),
@@ -422,15 +421,15 @@ class variation_importer_utils:
         plink_cmd = ["plink"]
         plink_cmd.append('--vcf')
         plink_cmd.append(variation_filepath)
-        if additional_output_type == 'plink19':
-            plink_cmd.append('--make-bed')
-        plink_cmd.append('--recode12')
-        plink_cmd.append('transpose')
-        plink_cmd.append('--output-missing-genotype')
-        plink_cmd.append("0")
+
+        # plink_cmd.append('--recode12')
+        # plink_cmd.append('transpose')
+        # plink_cmd.append('--output-missing-genotype')
+        # plink_cmd.append("0")
         plink_cmd.append('--freq')
         plink_cmd.append('--hardy')
         # plink_cmd.append('gz')
+        
         plink_cmd.append('--out')
         plink_cmd.append(variation_filepath)
 
@@ -482,8 +481,8 @@ class variation_importer_utils:
         base_filepath = os.path.join(file_output_directory, variation_filename)
         freq_filepath = base_filepath + '.frq'
 
-        maf_script_filepath = '/kb/module/lib/kb_variation_importer/Utils/MAF_check.R'
-        hwe_script_filepath = '/kb/module/lib/kb_variation_importer/Utils/HWE.R'
+        maf_script_filepath = '/kb/module/lib/VariationImporter/Utils/MAF_check.R'
+        hwe_script_filepath = '/kb/module/lib/VariationImporter/Utils/HWE.R'
         log("Frequency filepath: {}".format(freq_filepath))
         # TODO: make function to do Rscript calls.
         # generate visualizations and store in directory
@@ -493,31 +492,29 @@ class variation_importer_utils:
         maf_command.append(maf_script_filepath)
         maf_command.append(freq_filepath)
         maf_command.append("Minor Allele Frequencies.png")
-        print("MAF command: {}".format(maf_command))
         r = subprocess.Popen(maf_command,
                              cwd=image_output_directory,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT,
                              shell=False)
-        r.wait()
-
+        output, error = r.communicate()
+        log("Output from MAF command: {}".format(output))
+        if error:
+            log("Error caught when generating MAF: {}".format(error.strip()))
         if r.returncode != 0:
             log("Error creating MAF histogram in R")
 
         hwe_filepath = base_filepath + '.hwe'
         zoom_filepath = hwe_filepath + '.zoom'
-        log("HWE filepath: {}".format(hwe_filepath))
         zoom_command = '''awk '{{ if ($9 < 0.00001) print $0 }}' {} > {}'''.format(
             hwe_filepath, zoom_filepath)
-        log("Zoom cmd: {}".format(zoom_command))
-
         try:
             z = subprocess.Popen(zoom_command,
                                  cwd=file_output_directory,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT,
                                  shell=True)
-            z.wait()
+            output, error = z.communicate()
 
             if z.returncode != 0:
                 log("Error creating HWE zoom file.")
