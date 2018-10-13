@@ -1,0 +1,53 @@
+#
+# define display information
+#
+name: Method Name Here
+
+tooltip: |
+    Perform some kind of method
+
+screenshots: []
+
+icon: icon.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    genome_ref :
+        ui-name : |
+            Genome object reference
+        short-hint : |
+            Object reference format X/Y/Z
+    staging_file_subdir_path :
+        ui-name : |
+            Input file path
+        short-hint : |
+            The path of your SNP input file.
+    location_file_subdir_path :
+        ui-name: |
+            Location file path
+        short-hint : |
+            Path to location data associated with phenotypes
+    additional_output_type :
+        ui-name : |
+            Output format
+        short-hint : |
+            Additional output types  
+description : |
+    <p>This method will validate and import a VCF file.</p>

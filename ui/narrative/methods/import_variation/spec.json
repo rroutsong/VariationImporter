@@ -1,0 +1,106 @@
+{
+    "ver": "0.0.1",
+    "authors": [
+        "pjtinker"
+    ],
+    "contact": "",
+    "categories": ["active"],
+    "widgets": {
+        "input": null,
+        "output": "no-display`"
+    },
+    "parameters": [ 
+        {
+            "id": "genome_ref",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": [ "KBaseGenomes.Genome" ]
+            }
+        },
+        {
+            "id": "staging_file_subdir_path",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": [ ]
+            }            
+        },
+        {
+            "id": "location_file_subdir_path",
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": [ ]
+            }
+        }, 
+        {
+            "id": "additional_output_type",
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": ["none"],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [{
+                    "display": "PLINK 1.9",
+                    "value": "plink19"
+                }]
+            }
+        }
+    ],
+    "behavior": {
+        "service-mapping": {
+            "url": "",
+            "name": "VariationImporter",
+            "method": "import_variation",
+            "input_mapping": [
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_argument_position": 0
+                },
+                {
+                    "input_parameter": "genome_ref",
+                    "target_property": "genome_ref",
+                    "target_type_transform": "resolved-ref"
+                },
+                {
+                    "input_parameter": "staging_file_subdir_path",
+                    "target_property": "staging_file_subdir_path"                    
+                },
+                {
+                    "input_parameter": "additional_output_type",
+                    "target_property": "additional_output_type"
+                }
+            ],
+            "output_mapping": [
+                {
+                    "service_method_output_path": [0,"report_name"],
+                    "target_property": "report_name"
+                },
+                {
+                    "service_method_output_path": [0,"report_ref"],
+                    "target_property": "report_ref"
+                },
+                {
+                    "service_method_output_path": [0, "variation_ref"],
+                    "target_property": "variation_ref"
+                },
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace_name"
+                }
+            ]
+        }
+    },
+    "job_id_output_field": "docker"
+}
