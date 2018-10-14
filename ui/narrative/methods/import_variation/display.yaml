@@ -1,10 +1,10 @@
 #
 # define display information
 #
-name: Method Name Here
+name: Variation Importer
 
 tooltip: |
-    Perform some kind of method
+    Import SNP variation data
 
 screenshots: []
 
