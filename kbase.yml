@@ -2,7 +2,7 @@ module-name:
     VariationImporter
 
 module-description:
-    A KBase module
+    A KBase module that imports VCF files into KBase.GwasDataVariations
 
 service-language:
     python
